@@ -220,13 +220,19 @@ bool NAU7802::setSampleRate(uint8_t rate)
   return (setRegister(NAU7802_CTRL2, value));
 }
 
-//Select between 1 and 2
+//Select between 0 and 2
 bool NAU7802::setChannel(uint8_t channelNumber)
 {
-  if (channelNumber == NAU7802_CHANNEL_1)
-    return (clearBit(NAU7802_CTRL2_CHS, NAU7802_CTRL2)); //Channel 1 (default)
-  else
-    return (setBit(NAU7802_CTRL2_CHS, NAU7802_CTRL2)); //Channel 2
+  switch (channelNumber) {
+    case NAU7802_CHANNEL_1:
+      return (clearBit(NAU7802_I2C_CONTROL_TS, NAU7802_I2C_CONTROL) && clearBit(NAU7802_CTRL2_CHS, NAU7802_CTRL2)); //Channel 1 (default)
+    case NAU7802_CHANNEL_2:
+      return (clearBit(NAU7802_I2C_CONTROL_TS, NAU7802_I2C_CONTROL) && setBit(NAU7802_CTRL2_CHS, NAU7802_CTRL2)); //Channel 2
+    case NAU7802_CHANNEL_TS:
+      return (setBit(NAU7802_I2C_CONTROL_TS, NAU7802_I2C_CONTROL));  //Temperature sensor
+    default:
+      return false;
+  }
 }
 
 //Power up digital and analog sections of scale
@@ -292,7 +298,7 @@ unsigned long NAU7802::getLDORampDelay()
 }
 
 //Set the gain
-//x1, 2, 4, 8, 16, 32, 64, 128 are avaialable
+//x1, 2, 4, 8, 16, 32, 64, 128 are available
 bool NAU7802::setGain(uint8_t gainValue)
 {
   if (gainValue > 0b111)

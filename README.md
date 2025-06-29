@@ -26,6 +26,9 @@ This fork was created to provide a small and straightforward library for using t
 - Added function to change LDO mode (defaults to 0)
 	- See function `setLDOMode()`, param `NAU7802_LDOMODE_0` or `NAU7802_LDOMODE_1`
 	- See Table 11.14 in datasheet
+- Added functionality to read the NAU7802's internal temperature sensor
+    - See `setChannel()`, param `NAU7802_CHANNEL_TS`
+    - Use the gain factor 1 or 2, see Section 8.9 in datasheet
 - Tweaked default initialization settings
 	- Sampling: 10Hz
 	- PGA Gain: 1x
@@ -39,7 +42,6 @@ This fork was created to provide a small and straightforward library for using t
 
 ### Future Ideas
 - Add functions to toggle the internal weak & strong I2C pullups
-- Add functionality to read the NAU7802's internal temperature sensor
 
 
 SparkFun Attribution

@@ -90,6 +90,19 @@ typedef enum
   NAU7802_CTRL2_CHS = 7,
 } CTRL2_Bits;
 
+//Bits within the I2C_CONTROL register
+typedef enum
+{
+  NAU7802_I2C_CONTROL_BGPCP = 0,  // Disables bandgap chopper
+  NAU7802_I2C_CONTROL_TS    = 1,  // Switches PGA input to temperature sensor
+  NAU7802_I2C_CONTROL_BOPGA = 2,  // Enables the 2.5uA burnout current source to the PGA positive input
+  NAU7802_I2C_CONTROL_SI    = 3,  // Short the input together, measure offset
+  NAU7802_I2C_CONTROL_WPD   = 4,  // Disable bit for Weak Pull Up for I2C SCLK and SDA
+  NAU7802_I2C_CONTROL_SPE   = 5,  // Enable bit for Strong Pull Up for I2C SCLK and SDA
+  NAU7802_I2C_CONTROL_FRD   = 6,  // Enable bit for Fast Read ADC DATA (special non-standard I2C)
+  NAU7802_I2C_CONTROL_CRSD  = 7,  // Enable bit for Pull SDA low when conversion complete and I2C IDLE (special non-standard I2C)
+} I2C_CONTROL_Bits;
+
 //Bits within the PGA register
 typedef enum
 {
@@ -159,6 +172,7 @@ typedef enum
 {
   NAU7802_CHANNEL_1 = 0,
   NAU7802_CHANNEL_2 = 1,
+  NAU7802_CHANNEL_TS = 2,
 } NAU7802_Channels;
 
 //Calibration state
@@ -197,7 +211,7 @@ public:
   void setLDORampDelay(unsigned long delay); //LDO (AVDD) takes ~200ms to ramp up. During .begin, delay for _ldoRampDelay before performing calibrateAFE
   unsigned long getLDORampDelay();
   bool setSampleRate(uint8_t rate);       //Set the readings per second. 10, 20, 40, 80, and 320 samples per second is available
-  bool setChannel(uint8_t channelNumber); //Select between 1 and 2
+  bool setChannel(uint8_t channelNumber); //Select between 0 and 2
 
   bool calibrateAFE(NAU7802_Cal_Mode mode = NAU7802_CALMOD_INTERNAL);      //Synchronous calibration of the analog front end of the NAU7802. Returns true if CAL_ERR bit is 0 (no error)
   void beginCalibrateAFE(NAU7802_Cal_Mode mode = NAU7802_CALMOD_INTERNAL); //Begin asynchronous calibration of the analog front end of the NAU7802. Poll for completion with calAFEStatus() or wait with waitForCalibrateAFE().
